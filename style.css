@@ -1,0 +1,217 @@
+/* ─────────────────────────────────────────────
+   TUI Theme — AGS Bar
+   Pastel purple · gris cálido · estética ncurses
+   ───────────────────────────────────────────── */
+
+@define-color bg          #1e1c24;
+@define-color bg-surface  #252330;
+@define-color bg-selected #3d3458;
+
+@define-color purple-dim    #6b5f8a;
+@define-color purple        #b39ddb;
+@define-color purple-bright #cbb8f0;
+
+@define-color text   #d0c8e8;
+@define-color muted  #6b6880;
+
+/* ── Animación respiración ── */
+@keyframes breathe {
+  0% {
+    border-color: #6b5f8a;
+  }
+  50% {
+    border-color: #b39ddb;
+  }
+  100% {
+    border-color: #6b5f8a;
+  }
+}
+
+/* ── Base ── */
+* {
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+  font-size: 13px;
+  color: @text;
+}
+
+window {
+  background: transparent;
+}
+
+/* ── Contenedor principal ── */
+.main-container {
+  background-color: @bg;
+  border: 2px solid @purple-dim;
+  margin: 4px 8px;
+  padding: 0 6px;
+  min-height: 22px;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.main-container > box:first-child {
+  border-right: 2px solid @purple-dim;
+  padding-right: 6px;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.main-container > box:last-child {
+  border-left: 2px solid @purple-dim;
+  padding-left: 6px;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* ── Workspaces ── */
+.main-container > box:first-child > box button {
+  background: transparent;
+  color: @muted;
+  border: 2px solid @purple-dim;
+  border-radius: 0;
+  padding: 0 8px;
+  min-height: 18px;
+  min-width: 24px;
+  margin: 4px 1px;
+  opacity: 0.6;
+  animation: breathe 4s ease-in-out infinite;
+  transition: opacity 100ms;
+}
+
+.main-container > box:first-child > box button:hover {
+  color: @purple-bright;
+  border-color: @purple-bright;
+  opacity: 1;
+}
+
+.main-container > box:first-child > box button.activo {
+  color: @purple-bright;
+  background: @bg-selected;
+  border-color: @purple;
+  opacity: 1;
+}
+
+/* ── Reloj ── */
+.reloj-label {
+  color: @purple-bright;
+  letter-spacing: 2px;
+  font-size: 13px;
+  padding: 0 8px;
+}
+
+/* ── Audio ── */
+.audio {
+  background: transparent;
+  color: @purple;
+  border: none;
+  border-radius: 0;
+  padding: 0 8px;
+  min-height: 18px;
+  margin: 4px 0;
+  transition: color 100ms;
+}
+
+.audio:hover {
+  color: @purple-bright;
+  border-color: @purple;
+}
+
+.audio > popover > contents {
+  background: @bg-surface;
+  border: 1px solid @purple-dim;
+  border-radius: 0;
+  padding: 6px 8px;
+}
+
+.audio > popover > contents box {
+}
+
+/* ── Tray — reset completo del estilo GTK ── */
+.tray {
+}
+
+/* Reset del menubutton y todos sus estados */
+.tray menubutton,
+.tray menubutton:hover,
+.tray menubutton:active,
+.tray menubutton:focus,
+.tray menubutton:checked {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 4px 1px;
+  min-height: 18px;
+  min-width: 18px;
+  outline: none;
+}
+
+/* El borde lo ponemos solo en el estado normal */
+.tray menubutton {
+  border: none;
+  opacity: 0.75;
+  transition: opacity 100ms;
+}
+
+.tray menubutton:hover {
+  border: none;
+  opacity: 1;
+}
+
+/* Reset del toggle-button interno que genera GTK */
+.tray menubutton > button,
+.tray menubutton > toggle,
+.tray menubutton > button:hover,
+.tray menubutton > toggle:hover {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 2px;
+  margin: 0;
+  outline: none;
+}
+
+/* Reset de la imagen del ícono */
+.tray menubutton image,
+.tray menubutton > button image,
+.tray menubutton > toggle image {
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Red ── */
+.main-container > box:last-child > box {
+  color: @purple;
+  opacity: 0.85;
+}
+
+/* ── Audio — reset interno GTK (igual que tray) ── */
+.audio > button,
+.audio > toggle,
+.audio > button:hover,
+.audio > toggle:hover,
+.audio > button:active,
+.audio > toggle:active {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 2px;
+  margin: 0;
+  outline: none;
+}
+
+.audio image,
+.audio > button image,
+.audio > toggle image {
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
