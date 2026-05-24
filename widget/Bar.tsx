@@ -9,14 +9,21 @@ import Gdk from "gi://Gdk?version=4.0"
 import AstalWp from "gi://AstalWp"
 import { exec } from "ags/process"
 
+    ///////////////////////////////////////////
+  /////////////////WORKSPACE/////////////////
+///////////////////////////////////////////
+
 function Workspaces({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
+  //Crea un nuevo objeto
   const hypr = Hyprland.get_default()
+  //Obtiene los slots de workspaces
   const workspaces = createBinding(hypr, "workspaces")
+  //Revisa que workspace esta siendo usado actualmente
   const activo = createBinding(hypr, "focusedWorkspace")
 
-  // Obtener el monitor de Hyprland que corresponde al gdkmonitor
+  //Obtener el monitor de Hyprland que corresponde al gdkmonitor
   const monitorName = gdkmonitor.connector ?? ""
-
+  //Obtiene workspaces siendo usados
   const filtrados = workspaces.as((wss) =>
     wss
       .filter((ws) => ws.monitor?.name === monitorName)
@@ -39,9 +46,14 @@ function Workspaces({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   )
 }
 
+    ///////////////////////////////////////////
+  //////////////////AUDIO////////////////////
+///////////////////////////////////////////
+
 function Audio() {
-  //const { defaultSpeaker: speaker } = AstalWp.get_default()!
+  //Crea el objeto de Speaker
   const speaker = AstalWp.get_default().defaultSpeaker
+  //Toma el nombre del icono
   const iconName = createBinding(speaker, "volumeIcon")
   return (
     <menubutton class="audio" marginEnd={12}>
@@ -62,20 +74,32 @@ function Audio() {
   )
 }
 
+    //////////////////////////////////////////
+  ///////////////////TRAY///////////////////
+//////////////////////////////////////////
+
 function SegundoPlano() {
+  //Crea el objeto de Tray
   const tray = AstalTray.get_default()
+  //Obtiene los procesos en 2do plano
   const items = createBinding(tray, "items")
 
+  //Agregar interacción con los iconos
   const init = (btn: Gtk.MenuButton, item: AstalTray.TrayItem) => {
     btn.menuModel = item.menuModel
     btn.insert_action_group("dbusmenu", item.actionGroup)
+
+    item.connect("notify::menu-model", () => {
+      btn.menuModel = item.menuModel
+    })
+
     item.connect("notify::action-group", () => {
       btn.insert_action_group("dbusmenu", item.actionGroup)
     })
   }
 
   return (
-    <box class="tray" marginEnd={12}>
+    <box class="tray">
       <For each={items}>
         {(item) => (
           <menubutton $={(self) => init(self, item)}>
@@ -87,8 +111,14 @@ function SegundoPlano() {
   )
 }
 
+    ///////////////////////////////////////////
+  ///////////////////RELOJ///////////////////
+///////////////////////////////////////////
+
 function Reloj() {
+  //Bucle donde obtiene hora y m,inuto
   const hora = createPoll("", 1000, "date '+ %H:%M'")
+  //Bucle donde obtiene fecha detallada (Dia, Nº Dia, Mes, Año)
   const fechaCompleta = createPoll("", 60000, "date '+%A, %d de %B %Y'")
 
   return (
@@ -98,8 +128,14 @@ function Reloj() {
   )
 }
 
+    ///////////////////////////////////////////
+  /////////////////////RED///////////////////
+///////////////////////////////////////////
+
 function Red() {
+  //Obtiene el objeto de Network
   const red = Network.get_default()
+  //Bucle para revisar si esta conectado
   const conectado = createBinding(red, "wired")
 
   return (
@@ -128,6 +164,10 @@ MAC: ${info.hw_address || "N/A"}`
   )
 }
 
+    ///////////////////////////////////////////
+  ///////////////////BAR/////////////////////
+///////////////////////////////////////////
+
 export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   let win: Astal.Window
 
@@ -135,8 +175,6 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   onCleanup(() => {
     win.destroy()
   })
-
-  Audio()
 
   return (
     <window
