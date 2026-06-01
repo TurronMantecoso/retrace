@@ -2,8 +2,21 @@ import app from "ags/gtk4/app"
 import Gdk from "gi://Gdk?version=4.0"
 import Gtk from "gi://Gtk?version=4.0"
 import GLib from "gi://GLib"
-import Bar from "./widget/Bar"
-import NotificationPopups from "./widget/NotiPop"
+import Bar from "./widget/Bar/Bar"
+import NotificationPopups from "./widget/Notifd/NotiPop"
+import NotifCenter from "./widget/Notifd/NotifCenter"
+
+///////////////////////////////////////////
+//////////////////CONFIG///////////////////
+///////////////////////////////////////////
+
+const CONFIG = {
+  barOnAllMonitors: true, // false = solo el monitor principal
+}
+
+///////////////////////////////////////////
+////////////////BREATHE////////////////////
+///////////////////////////////////////////
 
 function startBreatheSync() {
   let bright = false
@@ -21,12 +34,22 @@ function startBreatheSync() {
   })
 }
 
+///////////////////////////////////////////
+///////////////////APP/////////////////////
+///////////////////////////////////////////
+
 app.start({
   css: "./style.css",
   main() {
-    app.get_monitors().forEach((monitor: Gdk.Monitor) => {
+    const monitors = app.get_monitors()
+    const targets = CONFIG.barOnAllMonitors ? monitors : [monitors[0]]
+
+    targets.forEach((monitor: Gdk.Monitor) => {
       Bar({ gdkmonitor: monitor })
     })
+
+    // NotifCenter solo en el monitor principal
+    NotifCenter({ gdkmonitor: monitors[0] })
     NotificationPopups()
     startBreatheSync()
   },

@@ -1,0 +1,392 @@
+/* ── Contenedor principal ── */
+.main-container {
+  background-color: @bg;
+  border: 2px solid @purple-dim;
+  margin: 4px 8px;
+  padding: 0 6px;
+  min-height: 22px;
+  transition: border-color 2s ease-in-out;
+}
+
+.main-container > box:first-child {
+  border-right: 2px solid @purple-dim;
+  padding-right: 6px;
+  transition: border-color 2s ease-in-out;
+}
+
+.main-container > box:last-child {
+  border-left: 2px solid @purple-dim;
+  padding-left: 6px;
+  transition: border-color 2s ease-in-out;
+}
+
+/* ── Workspaces ── */
+.main-container > box:first-child > box button {
+  background: transparent;
+  color: @muted;
+  border: 2px solid @purple-dim;
+  border-radius: 0;
+  padding: 0 8px;
+  min-height: 18px;
+  min-width: 24px;
+  margin: 4px 1px;
+  opacity: 0.6;
+  transition: border-color 2s ease-in-out, opacity 100ms;
+}
+
+.main-container > box:first-child > box button:hover {
+  color: @purple-bright;
+  border-color: @purple-bright;
+  opacity: 1;
+}
+
+.main-container > box:first-child > box button.activo {
+  color: @purple-bright;
+  background: @bg-selected;
+  border-color: @purple;
+  opacity: 1;
+}
+
+/* ── Reloj ── */
+.reloj-label {
+  color: @purple-bright;
+  letter-spacing: 2px;
+  font-size: 13px;
+  padding: 0 8px;
+}
+
+/* ── Audio ── */
+.audio {
+  background: transparent;
+  color: @purple;
+  border: none;
+  border-radius: 0;
+  padding: 0 2px;
+  min-height: 18px;
+  margin: 4px 0;
+  transition: color 100ms;
+}
+
+.audio:hover {
+  color: @purple-bright;
+  border-color: @purple;
+}
+
+.audio > popover > contents {
+  background: @bg-surface;
+  border: 1px solid @purple-dim;
+  border-radius: 0;
+  padding: 6px 8px;
+}
+
+.audio > popover > contents box {
+}
+
+.audio > button,
+.audio > toggle,
+.audio > button:hover,
+.audio > toggle:hover,
+.audio > button:active,
+.audio > toggle:active {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 2px;
+  margin: 0;
+  outline: none;
+}
+
+.audio image,
+.audio > button image,
+.audio > toggle image {
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Tray ── */
+.tray {
+}
+
+.tray menubutton,
+.tray menubutton:hover,
+.tray menubutton:active,
+.tray menubutton:focus,
+.tray menubutton:checked {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 4px 1px;
+  min-height: 18px;
+  min-width: 18px;
+  outline: none;
+}
+
+.tray menubutton {
+  border: none;
+  opacity: 0.75;
+  transition: opacity 100ms;
+}
+
+.tray menubutton:hover {
+  border: none;
+  opacity: 1;
+}
+
+.tray menubutton > button,
+.tray menubutton > toggle,
+.tray menubutton > button:hover,
+.tray menubutton > toggle:hover {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 2px;
+  margin: 0;
+  outline: none;
+}
+
+.tray menubutton image,
+.tray menubutton > button image,
+.tray menubutton > toggle image {
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Red ── */
+.main-container > box:last-child > box {
+  color: @purple;
+  opacity: 0.85;
+}
+
+/* ── Reloj — calendario popover ── */
+.reloj-label {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.reloj-label > button,
+.reloj-label > toggle {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0 8px;
+  min-height: 18px;
+}
+
+.reloj-label > popover > contents {
+  background: @bg-surface;
+  border: 1px solid @purple-dim;
+  border-radius: 0;
+  padding: 4px;
+}
+
+.reloj-label > popover > contents calendar {
+  background: @bg-surface;
+  color: @text;
+  border-radius: 0;
+}
+
+.reloj-label > popover > contents calendar:selected {
+  background: @bg-selected;
+  color: @purple-bright;
+  border-radius: 0;
+}
+
+.reloj-label > popover > contents calendar header {
+  background: @bg;
+  color: @purple-bright;
+  border-bottom: 1px solid @purple-dim;
+}
+
+.reloj-label > popover > contents calendar header button {
+  background: transparent;
+  border: none;
+  color: @purple;
+  border-radius: 0;
+}
+
+.reloj-label > popover > contents calendar header button:hover {
+  color: @purple-bright;
+  background: @bg-selected;
+}
+
+/* ── Notif badge ── */
+.notif-badge-box {
+  margin: 4px 1px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.notif-badge-tag {
+  color: @purple-bright;
+  border: 2px solid @purple-dim;
+  margin: 4px 1px;
+  padding: 0 8px;
+  min-height: 18px;
+  font-size: 13px;
+  transition: border-color 2s ease-in-out;
+}
+
+.notif-badge-count {
+  color: @muted;
+  border: 2px solid @purple-dim;
+  padding: 0px;
+  margin: 4px 1px;
+  min-height: 18px;
+  min-width: 18px;
+  font-size: 13px;
+  opacity: 0.6;
+  transition: border-color 2s ease-in-out;
+}
+
+.notif-badge-count.active {
+  color: @purple-bright;
+  border-color: @purple;
+  background: @bg-selected;
+  opacity: 1;
+}
+
+.notif-badge-box.open .notif-badge-tag {
+  background: @bg-selected;
+  border-color: @purple;
+}
+
+/* ── Audio label ── */
+.audio-label {
+  font-size: 10px;
+  color: @purple;
+}
+
+/* ── Red ── */
+.red-box {
+  color: @purple;
+  opacity: 0.85;
+}
+
+.red-icon {
+  color: @purple;
+}
+
+.red-label {
+  font-size: 10px;
+  color: @purple;
+}
+
+/* ── Brillo ── */
+.brillo-box {
+  margin: 4px 2px;
+  opacity: 0.65;
+}
+
+.brillo-icon {
+  color: @purple;
+  font-size: 13px;
+}
+
+.brillo-label {
+  font-size: 10px;
+  color: @muted;
+}
+
+/* ── Divider vertical ── */
+.bar-divider {
+  background: @purple-dim;
+  min-width: 1px;
+  min-height: 14px;
+  margin: 0 2px;
+  opacity: 0.5;
+}
+
+/* ── Power ── */
+.power-btn {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: @muted;
+  padding: 0 6px;
+  min-height: 18px;
+  margin: 4px 0;
+  transition: color 100ms;
+}
+
+.power-btn:hover {
+  color: @critical-color;
+}
+
+.power-btn > button,
+.power-btn > toggle {
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.power-btn label {
+  font-size: 20px;
+  color: inherit;
+}
+
+.power-btn > popover > contents {
+  background: @bg;
+  border: 1px solid @purple-dim;
+  border-radius: 0;
+  padding: 0;
+}
+
+.power-menu {
+  min-width: 160px;
+}
+
+.power-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid @purple-dim;
+  border-radius: 0;
+  color: @text;
+  font-size: 12px;
+  padding: 8px 14px;
+  min-height: 32px;
+  transition: background 100ms, color 100ms;
+}
+
+.power-item:last-child {
+  border-bottom: none;
+}
+
+.power-item label {
+  color: inherit;
+  font-size: 12px;
+}
+
+.power-item:hover {
+  background: @bg-selected;
+  color: @purple-bright;
+}
+
+.power-item.shutdown {
+  color: @muted;
+}
+
+.power-item.shutdown:hover {
+  background: @critical-bg;
+  color: @critical-color;
+}

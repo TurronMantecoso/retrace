@@ -1,0 +1,59 @@
+/* ─────────────────────────────────────────────
+   Breathe sync global
+   Las clases .breathe-bright / .breathe-dim se
+   alternan cada 2s via GLib.timeout_add() en app.ts
+   ───────────────────────────────────────────── */
+
+.breathe-bright .main-container,
+.breathe-bright.main-container {
+  border-color: @purple;
+}
+
+.breathe-bright .main-container > box:first-child,
+.breathe-bright .main-container > box:last-child {
+  border-color: @purple;
+}
+
+.breathe-bright .main-container > box:first-child > box button:not(:hover):not(.activo) {
+  border-color: @purple;
+}
+
+.breathe-bright .Notification:not(.critical):not(.low) {
+  border-color: @purple;
+}
+
+/* ── */
+
+.breathe-dim .main-container,
+.breathe-dim.main-container {
+  border-color: @purple-dim;
+}
+
+.breathe-dim .main-container > box:first-child,
+.breathe-dim .main-container > box:last-child {
+  border-color: @purple-dim;
+}
+
+.breathe-dim .main-container > box:first-child > box button:not(:hover):not(.activo) {
+  border-color: @purple-dim;
+}
+
+.breathe-dim .Notification:not(.critical):not(.low) {
+  border-color: @purple-dim;
+}
+
+.breathe-bright .audio {
+  border-color: @purple;
+}
+
+.breathe-dim .audio {
+  border-color: @purple-dim;
+}
+
+.breathe-bright .bar-divider {
+  background: @purple;
+}
+
+.breathe-dim .bar-divider {
+  background: @purple-dim;
+}

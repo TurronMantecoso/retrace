@@ -18,19 +18,25 @@ export default function NotificationPopups() {
   const notifiedHandler = notifd.connect("notified", (_, id, replaced) => {
     const notification = notifd.get_notification(id)
 
+    if (!notification) return
+
     if (replaced && notifications.get().some((n) => n.id === id)) {
-      setNotifications((ns) => ns.map((n) => (n.id === id ? notification : n)))
+      setNotifications((ns) =>
+        ns.map((n) => (n.id === id ? notification : n))
+      )
     } else {
       setNotifications((ns) => [notification, ...ns])
     }
 
-    // Auto-dismiss después de NOTIFICATION_TIMEOUT segundos
+    // Solo saca del popup — NO llama dismiss()
+    // La notificación queda viva en notifd para que NotifCenter la vea
     GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, NOTIFICATION_TIMEOUT, () => {
-      notification.dismiss()
+      setNotifications((ns) => ns.filter((n) => n.id !== notification.id))
       return GLib.SOURCE_REMOVE
     })
   })
 
+  // Si el usuario la descarta manualmente desde NotifCenter, sacarla del popup también
   const resolvedHandler = notifd.connect("resolved", (_, id) => {
     setNotifications((ns) => ns.filter((n) => n.id !== id))
   })

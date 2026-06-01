@@ -1,0 +1,22 @@
+/* ── Base ── */
+* {
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+  font-size: 13px;
+  color: @text;
+}
+
+window {
+  background: transparent;
+}
+
+/* ── Animación de entrada de notificaciones ── */
+@keyframes slide-in {
+  from {
+    margin-top: -8px;
+    opacity: 0;
+  }
+  to {
+    margin-top: 0;
+    opacity: 1;
+  }
+}

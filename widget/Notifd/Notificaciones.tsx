@@ -5,6 +5,9 @@ import GLib from "gi://GLib"
 import AstalNotifd from "gi://AstalNotifd"
 import Pango from "gi://Pango"
 
+const BODY_MAX_LINES = 3    // máximo de líneas del cuerpo
+const SUMMARY_MAX_CHARS = 60 // máximo de caracteres del título
+
 function isIcon(icon?: string | null) {
   const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!)
   return icon && iconTheme.has_icon(icon)
@@ -21,14 +24,16 @@ function time(time: number, format = "%H:%M") {
 function urgency(n: AstalNotifd.Notification) {
   const { LOW, NORMAL, CRITICAL } = AstalNotifd.Urgency
   switch (n.urgency) {
-    case LOW:
-      return "low"
-    case CRITICAL:
-      return "critical"
+    case LOW:      return "low"
+    case CRITICAL: return "critical"
     case NORMAL:
-    default:
-      return "normal"
+    default:       return "normal"
   }
+}
+
+// Trunca texto plano a N caracteres
+function truncate(text: string, max: number) {
+  return text.length > max ? text.slice(0, max).trimEnd() + "…" : text
 }
 
 interface NotificationProps {
@@ -43,6 +48,7 @@ export default function Notification({ notification: n }: NotificationProps) {
         class={`Notification ${urgency(n)}`}
         orientation={Gtk.Orientation.VERTICAL}
       >
+        {/* ── Header ── */}
         <box class="header">
           {(n.appIcon || isIcon(n.desktopEntry)) && (
             <image
@@ -67,28 +73,42 @@ export default function Notification({ notification: n }: NotificationProps) {
             <image iconName="window-close-symbolic" />
           </button>
         </box>
+
         <Gtk.Separator visible />
+
+        {/* ── Contenido ── */}
         <box class="content">
+          {/* Imagen adjunta */}
           {n.image && fileExists(n.image) && (
-            <image valign={Gtk.Align.START} class="image" file={n.image} />
+            <image
+              valign={Gtk.Align.START}
+              class="image"
+              file={n.image}
+              pixelSize={48}
+            />
           )}
+          {/* Ícono de app como imagen */}
           {n.image && isIcon(n.image) && (
             <box valign={Gtk.Align.START} class="icon-image">
               <image
                 iconName={n.image}
+                pixelSize={24}
                 halign={Gtk.Align.CENTER}
                 valign={Gtk.Align.CENTER}
               />
             </box>
           )}
+
           <box orientation={Gtk.Orientation.VERTICAL}>
+            {/* Título con límite de caracteres */}
             <label
               class="summary"
               halign={Gtk.Align.START}
               xalign={0}
-              label={n.summary}
+              label={truncate(n.summary, SUMMARY_MAX_CHARS)}
               ellipsize={Pango.EllipsizeMode.END}
             />
+            {/* Cuerpo con límite de líneas */}
             {n.body && (
               <label
                 class="body"
@@ -98,10 +118,14 @@ export default function Notification({ notification: n }: NotificationProps) {
                 xalign={0}
                 justify={Gtk.Justification.FILL}
                 label={n.body}
+                lines={BODY_MAX_LINES}
+                ellipsize={Pango.EllipsizeMode.END}
               />
             )}
           </box>
         </box>
+
+        {/* ── Acciones ── */}
         {n.actions.length > 0 && (
           <box class="actions">
             {n.actions.map(({ label, id }) => (
