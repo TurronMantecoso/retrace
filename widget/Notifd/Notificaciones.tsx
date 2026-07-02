@@ -61,7 +61,7 @@ export default function Notification({ notification: n }: NotificationProps) {
             class="app-name"
             halign={Gtk.Align.START}
             ellipsize={Pango.EllipsizeMode.END}
-            label={n.appName || "Unknown"}
+            label={n.urgency === AstalNotifd.Urgency.CRITICAL ? `[CRITICAL] ${n.appName || "SYS"}` : `> ${n.appName || "Unknown"}`}
           />
           <label
             class="time"
@@ -130,7 +130,7 @@ export default function Notification({ notification: n }: NotificationProps) {
           <box class="actions">
             {n.actions.map(({ label, id }) => (
               <button hexpand onClicked={() => n.invoke(id)}>
-                <label label={label} halign={Gtk.Align.CENTER} hexpand />
+                <label label={`[ ${label} ]`} halign={Gtk.Align.CENTER} hexpand />
               </button>
             ))}
           </box>

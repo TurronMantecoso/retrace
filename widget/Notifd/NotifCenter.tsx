@@ -37,7 +37,7 @@ function NotifCard({ n }: { n: AstalNotifd.Notification }) {
         )}
         <label
           class="nc-card-appname"
-          label={n.appName || "Unknown"}
+          label={`> ${n.appName || "Unknown"}`}
           halign={Gtk.Align.START}
           ellipsize={Pango.EllipsizeMode.END}
           maxWidthChars={20}
@@ -89,7 +89,7 @@ function NotifCard({ n }: { n: AstalNotifd.Notification }) {
           }}
         >
           <label
-            label={primaryAction ? `[ ${primaryAction.label} ]` : "[ OK ]"}
+            label={primaryAction ? `[ ${primaryAction.label} ]` : "[ proceed ]"}
             halign={Gtk.Align.CENTER}
             hexpand
           />
@@ -146,7 +146,7 @@ export default function NotifCenter({ gdkmonitor }: { gdkmonitor: Gdk.Monitor })
               notifd.get_notifications().forEach((n) => n.dismiss())
             }}
           >
-            <label label="limpiar" />
+            <label label="[ clear_all ]" />
           </button>
           <button
             class="nc-close-btn"
@@ -167,7 +167,7 @@ export default function NotifCenter({ gdkmonitor }: { gdkmonitor: Gdk.Monitor })
 
             <label
               class="nc-empty"
-              label="sin notificaciones"
+              label="> NO_NEW_LOGS"
               visible={notifications.as((ns) => ns.length === 0)}
               halign={Gtk.Align.CENTER}
               valign={Gtk.Align.CENTER}

@@ -1,0 +1,88 @@
+/* ── Lanzador de Aplicaciones (TUI Style) ── */
+window.applauncher {
+  background: transparent;
+}
+
+.applauncher-window {
+  background: @bg;
+  border: 2px solid @purple;
+  padding: 16px;
+  border-radius: 0;
+  min-width: 450px;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  animation: border-breathe 4s ease-in-out infinite;
+}
+
+@keyframes border-breathe {
+  0% { border-color: @purple-dim; }
+  50% { border-color: @purple-bright; }
+  100% { border-color: @purple-dim; }
+}
+
+.applauncher-search {
+  background: @bg-surface;
+  border: 1px solid @purple-dim;
+  padding: 8px 12px;
+  color: @purple-bright;
+}
+
+.prompt-icon {
+  color: @purple;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.applauncher-search entry {
+  background: transparent;
+  color: @text;
+  border: none;
+  box-shadow: none;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  caret-color: @purple-bright;
+}
+
+.applauncher-search entry:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.app-list {
+  margin-top: 10px;
+}
+
+.app-item {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0;
+  padding: 8px;
+  color: @text;
+  transition: all 100ms;
+}
+
+.app-item:hover, .app-item:focus {
+  background: @bg-selected;
+  border: 1px solid @purple;
+  color: @purple-bright;
+}
+
+.app-item image {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.app-name {
+  font-weight: bold;
+  color: @purple-bright;
+}
+
+.app-description {
+  color: @muted;
+  font-size: 11px;
+}
+
+.app-item:hover .app-description, .app-item:focus .app-description {
+  color: @text;
+}

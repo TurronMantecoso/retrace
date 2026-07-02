@@ -5,6 +5,7 @@ import GLib from "gi://GLib"
 import Bar from "./widget/Bar/Bar"
 import NotificationPopups from "./widget/Notifd/NotiPop"
 import NotifCenter from "./widget/Notifd/NotifCenter"
+import Applauncher from "./widget/applauncher/appL"
 
 ///////////////////////////////////////////
 //////////////////CONFIG///////////////////
@@ -51,6 +52,7 @@ app.start({
     // NotifCenter solo en el monitor principal
     NotifCenter({ gdkmonitor: monitors[0] })
     NotificationPopups()
+    Applauncher()
     startBreatheSync()
   },
 })

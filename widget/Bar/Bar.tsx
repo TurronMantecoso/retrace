@@ -1,3 +1,4 @@
+import app from "ags/gtk4/app"
 import { Astal } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import { For, createBinding, onCleanup } from "ags"
@@ -11,6 +12,12 @@ import AstalWp from "gi://AstalWp"
 import GLib from "gi://GLib"
 import { exec, execAsync } from "ags/process"
 import { notifCenterOpen, setNotifCenterOpen } from "../Notifd/state"
+
+///////////////////////////////////////////
+//////////////APP LAUNCHER/////////////////
+///////////////////////////////////////////
+
+
 
 ///////////////////////////////////////////
 /////////////////WORKSPACE/////////////////
@@ -292,7 +299,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
       <centerbox class="main-container">
         <box $type="start" spacing={2}>
           <Workspaces gdkmonitor={gdkmonitor} />
-          <NotifBadge />
+          {/* <NotifBadge /> */}
         </box>
 
         <box $type="center">

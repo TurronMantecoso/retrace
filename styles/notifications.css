@@ -1,6 +1,7 @@
 /* ── Ventana contenedora ── */
 .NotificationPopups {
   background: transparent;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
 }
 
 .NotificationPopups > box {
@@ -15,6 +16,7 @@
   border-radius: 0;
   animation: slide-in 180ms ease-out;
   transition: border-color 2s ease-in-out;
+  box-shadow: 0 0 8px rgba(187, 154, 247, 0.2);
 }
 
 /* ── Urgencia: LOW ── */
@@ -39,6 +41,7 @@
 /* ── Urgencia: CRITICAL ── */
 .Notification.critical {
   border-color: @critical-color;
+  box-shadow: 0 0 15px rgba(247, 118, 142, 0.4);
 }
 
 .Notification.critical .header {
@@ -88,8 +91,11 @@
   min-width: 16px;
   min-height: 16px;
   -gtk-icon-size: 16px;
-  margin-right: 2px;
+  margin-right: 6px;
   color: @purple;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 4px;
 }
 
 .Notification .header .app-name {
@@ -155,11 +161,12 @@
 
 .Notification .content .icon-image {
   border: 1px solid @purple-dim;
-  background: @bg-surface;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
   min-width: 36px;
   min-height: 36px;
   margin-right: 10px;
-  padding: 4px;
+  padding: 8px;
 }
 
 .Notification .content .icon-image image {
@@ -220,12 +227,15 @@
 
 .NotifCenter {
   background: transparent;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
 }
 
 .nc-container {
   background: @bg;
-  border: 1px solid @purple-dim;
+  border: 2px solid @purple;
   min-width: 320px;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  animation: border-breathe 4s ease-in-out infinite;
 }
 
 /* ── Header ── */
@@ -300,7 +310,10 @@
 .nc-card-icon {
   -gtk-icon-size: 14px;
   color: @purple;
-  margin-right: 2px;
+  margin-right: 4px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 4px;
 }
 
 .nc-card-appname {
