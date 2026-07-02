@@ -9,7 +9,7 @@ import Gtk from "gi://Gtk?version=4.0"
 import Gdk from "gi://Gdk?version=4.0"
 import AstalWp from "gi://AstalWp"
 import GLib from "gi://GLib"
-import { exec } from "ags/process"
+import { exec, execAsync } from "ags/process"
 import { notifCenterOpen, setNotifCenterOpen } from "../Notifd/state"
 
 ///////////////////////////////////////////
@@ -78,9 +78,20 @@ function NotifBadge() {
 ///////////////////////////////////////////
 
 function Audio() {
-  const speaker = AstalWp.get_default().defaultSpeaker
-  const iconName = createBinding(speaker, "volumeIcon")
+  const wp = AstalWp.get_default()
+  const speaker = wp?.defaultSpeaker
+
+  if (!speaker) {
+    return (
+      <menubutton class="audio" tooltipText="No hay dispositivo de audio">
+        <image iconName="audio-volume-muted-symbolic" />
+      </menubutton>
+    )
+  }
+
   const volume = createBinding(speaker, "volume")
+  const iconName = createBinding(speaker, "volumeIcon")
+  const mute = createBinding(speaker, "mute")
 
   return (
     <menubutton
@@ -89,14 +100,37 @@ function Audio() {
     >
       <image iconName={iconName} />
       <popover>
-        <box spacing={6}>
-          <button onClicked={() => exec("pavucontrol")}>
-            <image iconName="more-small-symbolic" />
-          </button>
-          <slider
-            widthRequest={200}
-            onChangeValue={({ value }) => speaker.set_volume(value)}
-            value={volume}
+        <box orientation={Gtk.Orientation.VERTICAL} spacing={8}>
+          <box spacing={6} orientation={Gtk.Orientation.HORIZONTAL}>
+            <button 
+              onClicked={() => speaker.set_mute(!speaker.mute)}
+              tooltipText={mute.as(m => m ? "Desmutear" : "Mutear")}
+            >
+              <image iconName={mute.as(m => m ? "audio-volume-muted-symbolic" : "audio-volume-high-symbolic")} />
+            </button>
+            <slider
+              hexpand
+              widthRequest={180}
+              onChangeValue={({ value }) => speaker.set_volume(value)}
+              value={volume}
+            />
+            <button 
+              onClicked={() => {
+                execAsync("pavucontrol").catch(err => {
+                  console.error("Error lanzando pavucontrol:", err)
+                  execAsync(["notify-send", "-u", "critical", "Error de Audio", "No se pudo abrir pavucontrol."]).catch(() => {})
+                })
+              }}
+              tooltipText="Configuración de sonido"
+            >
+              <image iconName="settings-symbolic" />
+            </button>
+          </box>
+          <label 
+            class="audio-label" 
+            label={createBinding(speaker, "description").as(d => d || "Desconocido")} 
+            ellipsize={3}
+            maxWidthChars={30} 
           />
         </box>
       </popover>
@@ -114,6 +148,12 @@ function Power() {
       <label label="⏻" />
       <popover>
         <box class="power-menu" orientation={Gtk.Orientation.VERTICAL}>
+          <button
+            class="power-item reload"
+            onClicked={() => execAsync("bash -c 'nohup bash -c \"sleep 0.5; pkill -x ags; sleep 0.2; ags run --gtk 4 app.ts\" >/dev/null 2>&1 &'") }
+          >
+            <label label="  Recargar Barra" halign={Gtk.Align.START} hexpand />
+          </button>
           <button
             class="power-item reboot"
             onClicked={() => exec("systemctl reboot")}
@@ -197,13 +237,11 @@ function Red() {
   const icon = primary.as((p) => {
     if (p === Network.Primary.WIFI) {
       const strength = red.wifi?.strength ?? 0
-      if (strength > 75) return "network-wireless-signal-excellent-symbolic"
-      if (strength > 50) return "network-wireless-signal-good-symbolic"
-      if (strength > 25) return "network-wireless-signal-ok-symbolic"
-      return "network-wireless-signal-weak-symbolic"
+      if (strength > 40) return "globe-alt2-symbolic"
+      return "strength-bars-1-symbolic"
     }
-    if (p === Network.Primary.WIRED) return "network-wired-symbolic"
-    return "network-offline-symbolic"
+    if (p === Network.Primary.WIRED) return "network-computer-symbolic"
+    return "offline-globe-symbolic"
   })
 
   const tooltip = primary.as((p) => {
@@ -267,7 +305,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
           <Audio />
           <Power />
         </box>
-        
+
       </centerbox>
     </window>
   )
