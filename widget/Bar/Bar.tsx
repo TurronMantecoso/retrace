@@ -221,11 +221,21 @@ function Reloj() {
   const hora = createPoll("", 1000, "date '+%H:%M'")
   const fechaCompleta = createPoll("", 60000, "date '+%A, %d de %B %Y'")
 
+  let cal: Gtk.Calendar
+
   return (
     <menubutton class="reloj-label" tooltipText={fechaCompleta}>
       <label label={hora} />
-      <popover>
-        <Gtk.Calendar />
+      <popover
+        $={(self) => {
+          self.connect("notify::visible", () => {
+            if (self.get_visible() && cal) {
+              cal.select_day(GLib.DateTime.new_now_local())
+            }
+          })
+        }}
+      >
+        <Gtk.Calendar $={(self) => (cal = self)} />
       </popover>
     </menubutton>
   )

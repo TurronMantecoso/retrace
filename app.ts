@@ -6,6 +6,7 @@ import Bar from "./widget/Bar/Bar"
 import NotificationPopups from "./widget/Notifd/NotiPop"
 import NotifCenter from "./widget/Notifd/NotifCenter"
 import Applauncher from "./widget/applauncher/appL"
+import OSD from "./widget/OSD/OSD"
 
 ///////////////////////////////////////////
 //////////////////CONFIG///////////////////
@@ -53,6 +54,7 @@ app.start({
     NotifCenter({ gdkmonitor: monitors[0] })
     NotificationPopups()
     Applauncher()
+    OSD()
     startBreatheSync()
   },
 })

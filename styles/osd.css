@@ -1,0 +1,52 @@
+/* ── OSD (On-Screen Display) ── */
+.osd-window {
+  background: transparent;
+}
+
+.osd-container {
+  background: @bg;
+  border: 2px solid @purple;
+  padding: 16px 24px;
+  border-radius: 0;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  animation: slide-in-bottom 150ms ease-out;
+  min-width: 300px;
+}
+
+.osd-item {
+  margin: 4px 0;
+}
+
+.osd-label {
+  color: @purple-dim;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+.osd-bar {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.vol-bar {
+  color: @purple-bright;
+}
+
+.bri-bar {
+  color: @text;
+}
+
+.osd-value {
+  color: @purple;
+  font-weight: bold;
+  font-size: 14px;
+  margin-left: 12px;
+  min-width: 45px;
+}
+
+@keyframes slide-in-bottom {
+  0% { margin-bottom: -50px; opacity: 0; }
+  100% { margin-bottom: 64px; opacity: 1; }
+}
