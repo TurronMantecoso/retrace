@@ -1,11 +1,217 @@
 /* ── Dashboard ── */
-.dashboard-container {
+.dashboard-bg {
   background: @bg-surface;
   border: 2px solid @purple;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-container {
   padding: 24px;
   font-family: "JetBrains Mono", "Fira Code", monospace;
   min-width: 380px;
-  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-info-val {
+  color: @purple-bright;
+  font-weight: bold;
+}
+
+/* === MEDIA PLAYER === */
+.dashboard-media {
+  background: rgba(0,0,0,0.4);
+  border: 1px dashed @purple-dim;
+  padding: 12px;
+}
+
+.media-empty-text {
+  color: @purple-dim;
+  font-style: italic;
+}
+
+.media-player-box {
+  min-height: 80px;
+}
+
+.media-cover {
+  min-width: 80px;
+  min-height: 80px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid @purple-dim;
+}
+
+.media-title {
+  color: @purple-bright;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.media-artist {
+  color: @text;
+  font-size: 12px;
+}
+
+.media-controls {
+  margin-top: 8px;
+}
+
+.media-btn {
+  background: transparent;
+  color: @purple-dim;
+  border: none;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+.media-btn:hover {
+  color: @purple-bright;
+  text-shadow: 0 0 5px @purple-bright;
+}
+
+/* === SLIDERS === */
+.dashboard-sliders {
+  background: rgba(0,0,0,0.4);
+  border: 1px dashed @purple-dim;
+  padding: 12px;
+}
+
+.dashboard-slider {
+  min-height: 12px;
+  margin: 0 8px;
+}
+
+.invisible-slider {
+  opacity: 0;
+}
+
+.invisible-slider trough {
+  min-height: 16px;
+  min-width: 16px;
+}
+
+.text-slider-bar {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 14px;
+  color: @purple-bright;
+  letter-spacing: 2px;
+}
+
+.slider-btn {
+  color: @purple-dim;
+  font-weight: bold;
+}
+
+/* === NOTIFICATIONS === */
+.dashboard-notifications {
+  background: rgba(0,0,0,0.4);
+  border: 1px dashed @purple-dim;
+  padding: 12px;
+}
+
+.nc-header {
+  margin-bottom: 8px;
+}
+
+.nc-dnd-btn, .quick-toggle-main {
+  background-color: transparent;
+  border-radius: 0px;
+  padding: 12px 16px;
+  border: 1px solid @bg-alt;
+  transition: all 0.2s ease-in-out;
+}
+
+.quick-toggle-main:hover {
+  border-color: @purple-dim;
+}
+
+.quick-toggle-main.active {
+  background-color: transparent;
+  border-color: @purple;
+  color: @purple-bright;
+  box-shadow: inset 0 0 8px rgba(180, 160, 255, 0.2);
+}
+
+.quick-toggle-expand {
+  background-color: transparent;
+  border-radius: 0px;
+  padding: 0 8px;
+  border: 1px solid @bg-alt;
+  border-left: none;
+}
+
+.quick-toggle-expand:hover {
+  border-color: @purple-dim;
+}
+
+.quick-toggle-expand.expanded {
+  background-color: transparent;
+  border-color: @purple;
+}
+
+.quick-toggle-title {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.quick-toggle-subtitle {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 12px;
+  color: @text-alt;
+  opacity: 0.8;
+}
+
+.nc-dnd-btn, .nc-clear-btn {
+  background: transparent;
+  color: @purple-dim;
+  border: 1px solid @purple-dim;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+.nc-dnd-btn:hover, .nc-clear-btn:hover {
+  background: rgba(144, 110, 222, 0.2);
+  color: @purple-bright;
+}
+
+/* Reutilizando clases de notificaciones */
+.nc-card {
+  background: @bg-alt;
+  border: 1px solid @purple-dim;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.nc-card-appname {
+  color: @purple-bright;
+  font-weight: bold;
+}
+
+.nc-card-summary {
+  color: @text;
+  font-weight: bold;
+}
+
+.nc-card-text {
+  color: @text;
+}
+
+.nc-action-open {
+  background: transparent;
+  color: @purple-dim;
+  border: 1px solid @purple-dim;
+  margin-top: 4px;
+}
+
+.nc-action-open:hover {
+  background: rgba(144, 110, 222, 0.2);
+  color: @purple-bright;
+}
+
+.nc-empty {
+  color: @purple-dim;
+  font-style: italic;
+  margin: 20px 0;
 }
 
 .dashboard-title {

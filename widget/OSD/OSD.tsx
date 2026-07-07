@@ -4,6 +4,7 @@ import GLib from "gi://GLib"
 import AstalWp from "gi://AstalWp"
 import { briPercent, startBrightnessMonitor } from "./brightness"
 import app from "ags/gtk4/app"
+import { dashboardOpen } from "../Dashboard/state"
 
 // OSD State
 const [visible, setVisible] = createState(false)
@@ -60,16 +61,20 @@ function OSDWidget() {
           setVolValue(spk.mute ? "MUTED" : `${Math.round(spk.volume * 100)}%`)
         }
 
+        // Flag to prevent OSD showing on initial sync
+        let isInit = true
+        setTimeout(() => isInit = false, 1000)
+
         volHandler = spk.connect("notify::volume", () => {
           updateUI()
           setLastUpdate("VOL")
-          showOsd()
+          if (!dashboardOpen() && !isInit) showOsd()
         })
 
         muteHandler = spk.connect("notify::mute", () => {
           updateUI()
           setLastUpdate("VOL")
-          showOsd()
+          if (!dashboardOpen() && !isInit) showOsd()
         })
         
         updateUI()

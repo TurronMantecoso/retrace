@@ -18,14 +18,14 @@ function PowerButton({ label, cmd, isCritical = false }: { label: string, cmd: s
   )
 }
 
-export default function PowerMenu() {
+export default function PowerMenu({ gdkmonitor, isPrimary = true }: { gdkmonitor?: Gdk.Monitor, isPrimary?: boolean }) {
   const monitors = createBinding(app, "monitors")
 
   return (
-    // Only show on primary monitor for simplicity, or we can use <For> to cover all.
-    // Let's cover the primary monitor but make it full screen overlay.
+    // Spawn across monitors with unique names. isPrimary determines if we render the buttons or just the dark overlay.
     <window
-      name="powermenu"
+      gdkmonitor={gdkmonitor}
+      name={`powermenu-${gdkmonitor?.get_connector() || "default"}`}
       application={app}
       visible={powerMenuOpen((v) => v)}
       keymode={Astal.Keymode.EXCLUSIVE}
@@ -46,31 +46,33 @@ export default function PowerMenu() {
       }}
     >
       <box class="powermenu-bg" hexpand vexpand halign={Gtk.Align.FILL} valign={Gtk.Align.FILL}>
-        <box 
-          class="powermenu-container" 
-          halign={Gtk.Align.CENTER} 
-          valign={Gtk.Align.CENTER}
-          hexpand
-          vexpand
-          orientation={Gtk.Orientation.VERTICAL}
-          spacing={32}
-        >
-          <label class="powermenu-title" label="> SELECT_POWER_ACTION_" />
-          
-          <box class="powermenu-actions" spacing={24} orientation={Gtk.Orientation.HORIZONTAL}>
-            <PowerButton label="LOGOUT" cmd="hyprctl dispatch exit" />
-            <PowerButton label="SUSPEND" cmd="systemctl suspend" />
-            <PowerButton label="REBOOT" cmd="systemctl reboot" />
-            <PowerButton label="SHUTDOWN" cmd="systemctl poweroff" isCritical={true} />
-          </box>
-          
-          <button 
-            class="powermenu-cancel"
-            onClicked={() => setPowerMenuOpen(false)}
+        {isPrimary && (
+          <box 
+            class="powermenu-container" 
+            halign={Gtk.Align.CENTER} 
+            valign={Gtk.Align.CENTER}
+            hexpand
+            vexpand
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={32}
           >
-            <label label="[ CANCEL ]" />
-          </button>
-        </box>
+            <label class="powermenu-title" label="> SELECT_POWER_ACTION_" />
+            
+            <box class="powermenu-actions" spacing={24} orientation={Gtk.Orientation.HORIZONTAL}>
+              <PowerButton label="LOGOUT" cmd="hyprctl dispatch exit" />
+              <PowerButton label="SUSPEND" cmd="systemctl suspend" />
+              <PowerButton label="REBOOT" cmd="systemctl reboot" />
+              <PowerButton label="SHUTDOWN" cmd="systemctl poweroff" isCritical={true} />
+            </box>
+            
+            <button 
+              class="powermenu-cancel"
+              onClicked={() => setPowerMenuOpen(false)}
+            >
+              <label label="[ CANCEL ]" />
+            </button>
+          </box>
+        )}
       </box>
     </window>
   )

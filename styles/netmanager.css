@@ -121,3 +121,86 @@
   background: @purple-bright;
   color: @bg;
 }
+
+.net-details-box {
+  background: rgba(0,0,0,0.4);
+  border: 1px dashed @purple-dim;
+  padding: 12px;
+  margin-top: 4px;
+  margin-left: 12px;
+  border-radius: 0;
+}
+
+.net-simplified-view {
+  padding-left: 12px;
+  margin-top: 8px;
+}
+
+.net-simplified-text {
+  color: @text;
+  font-size: 14px;
+}
+
+.net-btn.critical {
+  color: @critical-color;
+  border-color: @critical-color;
+}
+
+.net-btn.critical:hover {
+  background: @critical-color;
+  color: @bg;
+}
+
+/* Quick Toggles */
+.quick-toggle-container {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid @purple-dim;
+}
+
+.quick-toggle-main {
+  background: transparent;
+  color: @text;
+  border: none;
+  padding: 12px;
+  border-right: 1px solid @purple-dim;
+}
+
+.quick-toggle-main:hover {
+  background: rgba(144, 110, 222, 0.1); /* purple-dim with transparency */
+}
+
+.quick-toggle-main.active {
+  background: rgba(144, 110, 222, 0.2);
+  border-bottom: 2px solid @purple-bright;
+}
+
+.quick-toggle-main.active:hover {
+  background: rgba(144, 110, 222, 0.3);
+}
+
+.quick-toggle-title {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.quick-toggle-subtitle {
+  font-size: 11px;
+  color: @purple-dim;
+}
+
+.quick-toggle-expand {
+  background: transparent;
+  color: @purple-dim;
+  border: none;
+  padding: 0 8px;
+}
+
+.quick-toggle-expand:hover {
+  background: rgba(144, 110, 222, 0.1);
+  color: @purple-bright;
+}
+
+.quick-toggle-expand.expanded {
+  background: rgba(144, 110, 222, 0.2);
+  color: @purple-bright;
+}

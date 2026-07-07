@@ -13,7 +13,6 @@ import GLib from "gi://GLib"
 import { exec, execAsync } from "ags/process"
 import { notifCenterOpen, setNotifCenterOpen } from "../Notifd/state"
 import { setPowerMenuOpen } from "../PowerMenu/state"
-import { netmanagerOpen, setNetmanagerOpen } from "../NetManager/state"
 import { dashboardOpen, setDashboardOpen } from "../Dashboard/state"
 import { createState } from "ags"
 import CrtMask from "../CrtMask"
@@ -273,7 +272,7 @@ function Red() {
     <button
       class="red-box"
       tooltipText={tooltip}
-      onClicked={() => setNetmanagerOpen(!netmanagerOpen())}
+      onClicked={() => setDashboardOpen(!dashboardOpen())}
     >
       <box spacing={4} marginStart={4}>
         <image class="red-icon" iconName={icon} pixelSize={14} />

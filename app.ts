@@ -58,7 +58,13 @@ app.start({
     NotificationPopups()
     Applauncher()
     OSD()
-    PowerMenu()
+    
+    // Instanciar PowerMenu en todos los monitores.
+    // Solo el principal (i === 0) tendrá los botones, el resto solo tendrá el fondo oscuro.
+    monitors.forEach((monitor: Gdk.Monitor, i: number) => {
+      PowerMenu({ gdkmonitor: monitor, isPrimary: i === 0 })
+    })
+
     Dashboard()
     NetManager()
     startBreatheSync()

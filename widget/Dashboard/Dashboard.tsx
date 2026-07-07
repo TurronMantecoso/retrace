@@ -5,6 +5,10 @@ import GLib from "gi://GLib"
 import { dashboardOpen, setDashboardOpen } from "./state"
 import { createEffect } from "ags"
 import CrtMask from "../CrtMask"
+import QuickToggles from "./QuickToggles"
+import Media from "./Media"
+import Sliders from "./Sliders"
+import Notifications from "./Notifications"
 
 function drawProgressBar(percent: number, length: number = 15) {
   const filled = Math.round(percent * length)
@@ -39,9 +43,10 @@ export default function Dashboard() {
       application={app}
       visible={false}
       layer={Astal.Layer.OVERLAY}
-      anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
+      anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM}
       margin_top={12}
       margin_right={12}
+      margin_bottom={12}
       keymode={Astal.Keymode.ON_DEMAND}
       $={(self) => {
         win = self
@@ -63,50 +68,76 @@ export default function Dashboard() {
     >
       <CrtMask openState={dashboardOpen} durationMs={800}>
         <box class="dashboard-bg">
-          <box class="dashboard-container" orientation={Gtk.Orientation.VERTICAL} spacing={16}>
-            <label class="dashboard-title" label="> SYSTEM_MONITOR_" halign={Gtk.Align.START} />
+          <scrolledwindow 
+            hscrollbarPolicy={Gtk.PolicyType.NEVER} 
+            vscrollbarPolicy={Gtk.PolicyType.AUTOMATIC} 
+            vexpand={true}
+          >
+            <box class="dashboard-container" orientation={Gtk.Orientation.VERTICAL} spacing={16} widthRequest={380}>
+              <label class="dashboard-title" label="> CONTROL_CENTER_" halign={Gtk.Align.START} />
 
-            {/* CPU */}
-            <box class="dashboard-item" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
-              <label class="dashboard-label" label="> CPU_LOAD_" halign={Gtk.Align.START} />
-              <box spacing={8}>
-                <label class="dashboard-bar cpu-bar" label={cpuPercent((p) => drawProgressBar(p))} />
-                <label class="dashboard-value" label={cpuPercent((p) => `${Math.round(p * 100)}%`)} halign={Gtk.Align.END} hexpand />
+              {/* Toggles */}
+              <QuickToggles />
+
+              {/* Media & Sliders */}
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={16} class="dashboard-media-sliders-box">
+                <Media />
+                <Sliders />
               </box>
+              
+              <box class="dashboard-separator" />
+
+              {/* Notifications */}
+              <Notifications />
+
+              <box class="dashboard-separator" />
+
+              {/* System Monitor (Heredado) */}
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={12}>
+                <label class="dashboard-label" label="> SYSTEM_DIAGNOSTICS_" halign={Gtk.Align.START} />
+                
+                {/* CPU */}
+                <box class="dashboard-item" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
+                  <box spacing={8}>
+                    <label class="dashboard-label-small" label="CPU" />
+                    <label class="dashboard-bar cpu-bar" label={cpuPercent((p) => drawProgressBar(p, 10))} hexpand />
+                    <label class="dashboard-value" label={cpuPercent((p) => `${Math.round(p * 100)}%`)} halign={Gtk.Align.END} />
+                  </box>
+                </box>
+
+                {/* RAM */}
+                <box class="dashboard-item" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
+                  <box spacing={8}>
+                    <label class="dashboard-label-small" label="RAM" />
+                    <label class="dashboard-bar ram-bar" label={ramInfo((info) => drawProgressBar(info.used / info.total, 10))} hexpand />
+                    <label class="dashboard-value" label={ramInfo((info) => `${Math.round(info.used)} MB`)} halign={Gtk.Align.END} />
+                  </box>
+                </box>
+
+                {/* DISCO */}
+                <box class="dashboard-item" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
+                  <box spacing={8}>
+                    <label class="dashboard-label-small" label="DSK" />
+                    <label class="dashboard-bar disk-bar" label={diskInfo((info) => drawProgressBar(info.percent, 10))} hexpand />
+                    <label class="dashboard-value" label={diskInfo((info) => `${info.used}/${info.total}`)} halign={Gtk.Align.END} />
+                  </box>
+                </box>
+
+                {/* INFO EXTRA */}
+                <box spacing={16}>
+                  <box>
+                    <label class="dashboard-info-key" label="UPT: " />
+                    <label class="dashboard-info-val" label={uptime((v) => v)} />
+                  </box>
+                  <box>
+                    <label class="dashboard-info-key" label="IP: " />
+                    <label class="dashboard-info-val" label={ipAddress((v) => v)} />
+                  </box>
+                </box>
+              </box>
+
             </box>
-
-            {/* RAM */}
-            <box class="dashboard-item" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
-              <label class="dashboard-label" label="> MEMORY_ALLOCATION_" halign={Gtk.Align.START} />
-              <box spacing={8}>
-                <label class="dashboard-bar ram-bar" label={ramInfo((info) => drawProgressBar(info.used / info.total))} />
-                <label class="dashboard-value" label={ramInfo((info) => `${Math.round(info.used)} MB`)} halign={Gtk.Align.END} hexpand />
-              </box>
-            </box>
-
-            {/* DISCO */}
-            <box class="dashboard-item" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
-              <label class="dashboard-label" label="> ROOT_FS_USAGE_" halign={Gtk.Align.START} />
-              <box spacing={8}>
-                <label class="dashboard-bar disk-bar" label={diskInfo((info) => drawProgressBar(info.percent))} />
-                <label class="dashboard-value" label={diskInfo((info) => `${info.used}/${info.total}`)} halign={Gtk.Align.END} hexpand />
-              </box>
-            </box>
-
-            <box class="dashboard-separator" />
-
-            {/* INFO EXTRA */}
-            <box orientation={Gtk.Orientation.VERTICAL} spacing={8}>
-              <box>
-                <label class="dashboard-info-key" label="UPTIME: " />
-                <label class="dashboard-info-val" label={uptime((v) => v)} />
-              </box>
-              <box>
-                <label class="dashboard-info-key" label="IP_ADDR: " />
-                <label class="dashboard-info-val" label={ipAddress((v) => v)} />
-              </box>
-            </box>
-          </box>
+          </scrolledwindow>
         </box>
       </CrtMask>
     </window>
