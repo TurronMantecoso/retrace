@@ -4,6 +4,10 @@ import app from "ags/gtk4/app"
 import Network from "gi://AstalNetwork"
 import Bluetooth from "gi://AstalBluetooth"
 import { execAsync } from "ags/process"
+import GLib from "gi://GLib"
+import { netmanagerOpen, setNetmanagerOpen } from "./state"
+import { createEffect } from "ags"
+import CrtMask from "../CrtMask"
 
 // === COMPONENTES DE WIFI ===
 function WifiAP({ ap, isCurrent }: { ap: Network.AccessPoint, isCurrent: boolean }) {
@@ -216,6 +220,20 @@ function BTPanel() {
 }
 
 export default function NetManager() {
+  let win: Astal.Window
+
+  createEffect(() => {
+    if (!win) return
+    if (netmanagerOpen()) {
+      win.set_visible(true)
+    } else {
+      GLib.timeout_add(GLib.PRIORITY_DEFAULT, 800, () => {
+        if (!netmanagerOpen()) win.set_visible(false)
+        return GLib.SOURCE_REMOVE
+      })
+    }
+  })
+
   return (
     <window
       name="netmanager"
@@ -225,10 +243,16 @@ export default function NetManager() {
       anchor={Astal.WindowAnchor.NONE} // Centrado
       keymode={Astal.Keymode.EXCLUSIVE}
       $={(self) => {
+        win = self
+        self.connect("notify::visible", () => {
+          if (self.visible && !netmanagerOpen()) {
+            setNetmanagerOpen(true)
+          }
+        })
         const keyCtrl = new Gtk.EventControllerKey()
         keyCtrl.connect("key-pressed", (_, keyval) => {
           if (keyval === Gdk.KEY_Escape) {
-            self.set_visible(false)
+            setNetmanagerOpen(false)
             return true
           }
           return false
@@ -236,13 +260,20 @@ export default function NetManager() {
         self.add_controller(keyCtrl)
       }}
     >
-      <box class="netmanager-bg" hexpand vexpand halign={Gtk.Align.FILL} valign={Gtk.Align.FILL}>
-        <box class="netmanager-container" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} hexpand vexpand orientation={Gtk.Orientation.HORIZONTAL} spacing={24}>
-          <NetworkPanel />
-          <box class="netmanager-separator" />
-          <BTPanel />
+      <CrtMask openState={netmanagerOpen} durationMs={800}>
+        <box class="netmanager-bg" hexpand vexpand halign={Gtk.Align.FILL} valign={Gtk.Align.FILL}>
+          <box class="netmanager-container" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} hexpand vexpand>
+            <box homogeneous={true} hexpand>
+              <box class="net-panel-left">
+                <NetworkPanel />
+              </box>
+              <box class="net-panel-right">
+                <BTPanel />
+              </box>
+            </box>
+          </box>
         </box>
-      </box>
+      </CrtMask>
     </window>
   )
 }

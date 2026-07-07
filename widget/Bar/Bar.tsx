@@ -13,6 +13,10 @@ import GLib from "gi://GLib"
 import { exec, execAsync } from "ags/process"
 import { notifCenterOpen, setNotifCenterOpen } from "../Notifd/state"
 import { setPowerMenuOpen } from "../PowerMenu/state"
+import { netmanagerOpen, setNetmanagerOpen } from "../NetManager/state"
+import { dashboardOpen, setDashboardOpen } from "../Dashboard/state"
+import { createState } from "ags"
+import CrtMask from "../CrtMask"
 import app from "ags/gtk4/app"
 
 ///////////////////////////////////////////
@@ -38,11 +42,11 @@ function Workspaces({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   )
 
   return (
-    <box>
+    <box class="workspaces-container">
       <For each={filtrados}>
         {(ws) => (
           <button
-            class={activo.as((a) => (a?.id === ws.id ? "activo" : ""))}
+            class={activo.as((a) => (a?.id === ws.id ? "workspace-btn activo" : "workspace-btn"))}
             onClicked={() => hypr.dispatch("workspace", `${ws.id}`)}
           >
             <label label={`${ws.id}`} />
@@ -66,7 +70,7 @@ function NotifBadge() {
       class={notifCenterOpen((open) =>
         open ? "notif-badge-box open" : "notif-badge-box"
       )}
-      onClicked={() => setNotifCenterOpen(!notifCenterOpen.get())}
+      onClicked={() => setNotifCenterOpen(!notifCenterOpen())}
       tooltipText="Centro de notificaciones"
     >
       <box spacing={2}>
@@ -234,6 +238,7 @@ function Red() {
   const primary = createBinding(red, "primary")
   const wifi = createBinding(red, "wifi")
   const wired = createBinding(red, "wired")
+  const connected = primary.as(p => p !== Network.Primary.NONE)
 
   const icon = primary.as((p) => {
     if (p === Network.Primary.WIFI) {
@@ -265,10 +270,10 @@ function Red() {
   })
 
   return (
-    <button 
-      class="red-box" 
+    <button
+      class="red-box"
       tooltipText={tooltip}
-      onClicked={() => app.toggle_window("netmanager")}
+      onClicked={() => setNetmanagerOpen(!netmanagerOpen())}
     >
       <box spacing={4} marginStart={4}>
         <image class="red-icon" iconName={icon} pixelSize={14} />
@@ -284,6 +289,13 @@ function Red() {
 export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   let win: Astal.Window
 
+  const [barLoaded, setBarLoaded] = createState(false)
+  
+  GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1500, () => {
+    setBarLoaded(true)
+    return GLib.SOURCE_REMOVE
+  })
+
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
   onCleanup(() => win.destroy())
 
@@ -296,24 +308,26 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
       anchor={TOP | LEFT | RIGHT}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
     >
-      <centerbox class="main-container">
-        <box $type="start" spacing={2}>
-          <Workspaces gdkmonitor={gdkmonitor} />
-          {/* <NotifBadge /> */}
-        </box>
+      <CrtMask openState={barLoaded} durationMs={500} scanlineHeight={10}>
+        <centerbox class="main-container">
+          <box $type="start" spacing={2}>
+            <Workspaces gdkmonitor={gdkmonitor} />
+          </box>
 
-        <box $type="center">
-          <Reloj />
-        </box>
+          <box $type="center">
+            <Reloj />
+          </box>
 
-        <box $type="end" spacing={4}>
-          <Red />
-          <SegundoPlano />
-          <Audio />
-          <Power />
-        </box>
-
-      </centerbox>
+          <box $type="end" spacing={4}>
+            <box spacing={4}>
+              <Red />
+              <SegundoPlano />
+              <Audio />
+              <Power />
+            </box>
+          </box>
+        </centerbox>
+      </CrtMask>
     </window>
   )
 }

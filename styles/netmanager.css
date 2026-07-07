@@ -19,6 +19,15 @@
   background: @purple-dim;
 }
 
+.net-panel-left {
+  border-right: 2px solid @purple-dim;
+  padding-right: 24px;
+}
+
+.net-panel-right {
+  padding-left: 24px;
+}
+
 .net-panel {
   min-width: 250px;
 }

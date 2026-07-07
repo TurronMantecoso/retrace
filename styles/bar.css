@@ -21,7 +21,7 @@
 }
 
 /* ── Workspaces ── */
-.main-container > box:first-child > box button {
+.workspace-btn {
   background: transparent;
   color: @muted;
   border: 2px solid @purple-dim;
@@ -34,13 +34,13 @@
   transition: border-color 2s ease-in-out, opacity 100ms;
 }
 
-.main-container > box:first-child > box button:hover {
+.workspace-btn:hover {
   color: @purple-bright;
   border-color: @purple-bright;
   opacity: 1;
 }
 
-.main-container > box:first-child > box button.activo {
+.workspace-btn.activo {
   color: @purple-bright;
   background: @bg-selected;
   border-color: @purple;
