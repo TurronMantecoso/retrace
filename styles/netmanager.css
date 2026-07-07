@@ -1,0 +1,114 @@
+/* ── NetManager ── */
+.netmanager-bg {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.netmanager-container {
+  background: @bg-surface;
+  border: 2px solid @purple;
+  padding: 24px;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  /* Fix size for lists */
+  min-width: 600px;
+  min-height: 400px;
+}
+
+.netmanager-separator {
+  min-width: 2px;
+  background: @purple-dim;
+}
+
+.net-panel {
+  min-width: 250px;
+}
+
+.net-title {
+  color: @purple-bright;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.net-toggle-btn {
+  background: transparent;
+  color: @text;
+  font-weight: bold;
+  border: 1px solid @purple-dim;
+  padding: 4px 8px;
+  border-radius: 0;
+}
+
+.net-toggle-btn:hover {
+  background: @purple-dim;
+}
+
+.net-list-item {
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px;
+  border-radius: 0;
+  color: @text;
+  transition: background 0.2s;
+}
+
+.net-list-item:hover {
+  background: rgba(179, 157, 219, 0.1);
+  border: 1px solid @purple-dim;
+}
+
+.net-list-item.active {
+  background: rgba(179, 157, 219, 0.2);
+  border: 1px solid @purple;
+}
+
+.net-icon {
+  color: @purple-bright;
+}
+
+.net-ssid {
+  font-size: 14px;
+}
+
+.net-strength {
+  color: @purple-dim;
+  font-size: 12px;
+}
+
+.net-active-indicator {
+  color: #a3be8c; /* Verde éxito */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.net-disabled-text {
+  color: @critical-color;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.net-password-box {
+  margin-top: 4px;
+  margin-left: 8px;
+  padding: 8px;
+  background: rgba(0,0,0,0.5);
+  border-left: 2px solid @purple-bright;
+}
+
+.prompt-icon {
+  color: @purple-bright;
+  font-weight: bold;
+}
+
+.net-btn {
+  background: transparent;
+  color: @purple-bright;
+  border: 1px solid @purple-bright;
+  padding: 4px 8px;
+  border-radius: 0;
+}
+
+.net-btn:hover {
+  background: @purple-bright;
+  color: @bg;
+}

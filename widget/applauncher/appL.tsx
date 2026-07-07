@@ -6,14 +6,24 @@ import { execAsync } from "ags/process"
 
 const MAX_ITEMS = 50
 
+const iconCache: Record<string, string> = {}
+
 function lookupIcon(iconName: string | null): string {
   if (!iconName) return "application-x-executable"
-  if (iconName.startsWith("/")) return iconName
+  if (iconCache[iconName]) return iconCache[iconName]
+  
+  if (iconName.startsWith("/")) {
+    iconCache[iconName] = iconName
+    return iconName
+  }
 
   const display = Gdk.Display.get_default()
   if (display) {
     const theme = Gtk.IconTheme.get_for_display(display)
-    if (theme.has_icon(iconName)) return iconName
+    if (theme.has_icon(iconName)) {
+      iconCache[iconName] = iconName
+      return iconName
+    }
   }
 
   const home = GLib.get_home_dir()
@@ -45,10 +55,12 @@ function lookupIcon(iconName: string | null): string {
 
   for (const path of paths) {
     if (GLib.file_test(path, GLib.FileTest.EXISTS)) {
+      iconCache[iconName] = path
       return path
     }
   }
 
+  iconCache[iconName] = "application-x-executable"
   return "application-x-executable"
 }
 

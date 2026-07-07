@@ -275,8 +275,18 @@
 
 /* ── Red ── */
 .red-box {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0 4px;
+  margin: 4px 2px;
   color: @purple;
   opacity: 0.85;
+  transition: opacity 100ms;
+}
+
+.red-box:hover {
+  opacity: 1;
 }
 
 .red-icon {

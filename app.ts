@@ -7,6 +7,9 @@ import NotificationPopups from "./widget/Notifd/NotiPop"
 import NotifCenter from "./widget/Notifd/NotifCenter"
 import Applauncher from "./widget/applauncher/appL"
 import OSD from "./widget/OSD/OSD"
+import PowerMenu from "./widget/PowerMenu/PowerMenu"
+import Dashboard from "./widget/Dashboard/Dashboard"
+import NetManager from "./widget/NetManager/NetManager"
 
 ///////////////////////////////////////////
 //////////////////CONFIG///////////////////
@@ -55,6 +58,9 @@ app.start({
     NotificationPopups()
     Applauncher()
     OSD()
+    PowerMenu()
+    Dashboard()
+    NetManager()
     startBreatheSync()
   },
 })

@@ -12,6 +12,8 @@ import AstalWp from "gi://AstalWp"
 import GLib from "gi://GLib"
 import { exec, execAsync } from "ags/process"
 import { notifCenterOpen, setNotifCenterOpen } from "../Notifd/state"
+import { setPowerMenuOpen } from "../PowerMenu/state"
+import app from "ags/gtk4/app"
 
 ///////////////////////////////////////////
 //////////////APP LAUNCHER/////////////////
@@ -151,31 +153,13 @@ function Audio() {
 
 function Power() {
   return (
-    <menubutton class="power-btn" tooltipText="Menú de energía">
+    <button 
+      class="power-btn" 
+      tooltipText="Menú de energía"
+      onClicked={() => setPowerMenuOpen(true)}
+    >
       <label label="⏻" />
-      <popover>
-        <box class="power-menu" orientation={Gtk.Orientation.VERTICAL}>
-          <button
-            class="power-item reload"
-            onClicked={() => execAsync("bash -c 'nohup bash -c \"sleep 0.5; pkill -x ags; sleep 0.2; ags run --gtk 4 app.ts\" >/dev/null 2>&1 &'") }
-          >
-            <label label="  Recargar Barra" halign={Gtk.Align.START} hexpand />
-          </button>
-          <button
-            class="power-item reboot"
-            onClicked={() => exec("systemctl reboot")}
-          >
-            <label label="󰜉  Reiniciar" halign={Gtk.Align.START} hexpand />
-          </button>
-          <button
-            class="power-item shutdown"
-            onClicked={() => exec("systemctl poweroff")}
-          >
-            <label label="⏻  Apagar" halign={Gtk.Align.START} hexpand />
-          </button>
-        </box>
-      </popover>
-    </menubutton>
+    </button>
   )
 }
 
@@ -281,9 +265,15 @@ function Red() {
   })
 
   return (
-    <box class="red-box" spacing={4} marginStart={4} tooltipText={tooltip}>
-      <image class="red-icon" iconName={icon} pixelSize={14} />
-    </box>
+    <button 
+      class="red-box" 
+      tooltipText={tooltip}
+      onClicked={() => app.toggle_window("netmanager")}
+    >
+      <box spacing={4} marginStart={4}>
+        <image class="red-icon" iconName={icon} pixelSize={14} />
+      </box>
+    </button>
   )
 }
 
