@@ -12,11 +12,10 @@ import AstalWp from "gi://AstalWp"
 import GLib from "gi://GLib"
 import { exec, execAsync } from "ags/process"
 import { notifCenterOpen, setNotifCenterOpen } from "../Notifd/state"
-import { setPowerMenuOpen } from "../PowerMenu/state"
+import { setPowerMenuOpen, setActivePowerMonitor } from "../PowerMenu/state"
 import { dashboardOpen, setDashboardOpen } from "../Dashboard/state"
 import { createState } from "ags"
 import CrtMask from "../CrtMask"
-import app from "ags/gtk4/app"
 
 ///////////////////////////////////////////
 //////////////APP LAUNCHER/////////////////
@@ -154,12 +153,15 @@ function Audio() {
 /////////////////POWER/////////////////////
 ///////////////////////////////////////////
 
-function Power() {
+function Power({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   return (
     <button 
       class="power-btn" 
       tooltipText="Menú de energía"
-      onClicked={() => setPowerMenuOpen(true)}
+      onClicked={() => {
+        setActivePowerMonitor(gdkmonitor?.get_connector() || "")
+        setPowerMenuOpen(true)
+      }}
     >
       <label label="⏻" />
     </button>
@@ -322,7 +324,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
               <Red />
               <SegundoPlano />
               <Audio />
-              <Power />
+              <Power gdkmonitor={gdkmonitor} />
             </box>
           </box>
         </centerbox>

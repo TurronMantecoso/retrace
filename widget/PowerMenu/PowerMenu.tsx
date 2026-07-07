@@ -1,7 +1,7 @@
 import { Astal, Gtk, Gdk } from "ags/gtk4"
 import { createBinding } from "ags"
 import { execAsync } from "ags/process"
-import { powerMenuOpen, setPowerMenuOpen } from "./state"
+import { powerMenuOpen, setPowerMenuOpen, activePowerMonitor } from "./state"
 import app from "ags/gtk4/app"
 
 function PowerButton({ label, cmd, isCritical = false }: { label: string, cmd: string, isCritical?: boolean }) {
@@ -18,11 +18,10 @@ function PowerButton({ label, cmd, isCritical = false }: { label: string, cmd: s
   )
 }
 
-export default function PowerMenu({ gdkmonitor, isPrimary = true }: { gdkmonitor?: Gdk.Monitor, isPrimary?: boolean }) {
+export default function PowerMenu({ gdkmonitor }: { gdkmonitor?: Gdk.Monitor }) {
   const monitors = createBinding(app, "monitors")
 
   return (
-    // Spawn across monitors with unique names. isPrimary determines if we render the buttons or just the dark overlay.
     <window
       gdkmonitor={gdkmonitor}
       name={`powermenu-${gdkmonitor?.get_connector() || "default"}`}
@@ -46,33 +45,32 @@ export default function PowerMenu({ gdkmonitor, isPrimary = true }: { gdkmonitor
       }}
     >
       <box class="powermenu-bg" hexpand vexpand halign={Gtk.Align.FILL} valign={Gtk.Align.FILL}>
-        {isPrimary && (
-          <box 
-            class="powermenu-container" 
-            halign={Gtk.Align.CENTER} 
-            valign={Gtk.Align.CENTER}
-            hexpand
-            vexpand
-            orientation={Gtk.Orientation.VERTICAL}
-            spacing={32}
-          >
-            <label class="powermenu-title" label="> SELECT_POWER_ACTION_" />
-            
-            <box class="powermenu-actions" spacing={24} orientation={Gtk.Orientation.HORIZONTAL}>
-              <PowerButton label="LOGOUT" cmd="hyprctl dispatch exit" />
-              <PowerButton label="SUSPEND" cmd="systemctl suspend" />
-              <PowerButton label="REBOOT" cmd="systemctl reboot" />
-              <PowerButton label="SHUTDOWN" cmd="systemctl poweroff" isCritical={true} />
-            </box>
-            
-            <button 
-              class="powermenu-cancel"
-              onClicked={() => setPowerMenuOpen(false)}
-            >
-              <label label="[ CANCEL ]" />
-            </button>
+        <box 
+          visible={activePowerMonitor((mon) => mon === (gdkmonitor?.get_connector() || ""))}
+          class="powermenu-container" 
+          halign={Gtk.Align.CENTER} 
+          valign={Gtk.Align.CENTER}
+          hexpand
+          vexpand
+          orientation={Gtk.Orientation.VERTICAL}
+          spacing={32}
+        >
+          <label class="powermenu-title" label="> SELECT_POWER_ACTION_" />
+          
+          <box class="powermenu-actions" spacing={24} orientation={Gtk.Orientation.HORIZONTAL}>
+            <PowerButton label="LOGOUT" cmd="hyprctl dispatch exit" />
+            <PowerButton label="SUSPEND" cmd="systemctl suspend" />
+            <PowerButton label="REBOOT" cmd="systemctl reboot" />
+            <PowerButton label="SHUTDOWN" cmd="systemctl poweroff" isCritical={true} />
           </box>
-        )}
+          
+          <button 
+            class="powermenu-cancel"
+            onClicked={() => setPowerMenuOpen(false)}
+          >
+            <label label="[ CANCEL ]" />
+          </button>
+        </box>
       </box>
     </window>
   )
