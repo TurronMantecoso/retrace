@@ -45,6 +45,24 @@ function startBreatheSync() {
 
 app.start({
   css: "./style.css",
+  requestHandler: (args: string[], res: (response: any) => void) => {
+    if (args[0] === "toggle" && args[1]) {
+      const win = app.get_window(args[1])
+      if (win) {
+        win.set_visible(!win.visible)
+        return res("ok")
+      }
+      return res("window not found")
+    }
+    
+    const win = app.get_window(args[0])
+    if (win) {
+      win.set_visible(!win.visible)
+      return res("ok")
+    }
+    
+    res("unknown request")
+  },
   main() {
     const monitors = app.get_monitors()
     const targets = CONFIG.barOnAllMonitors ? monitors : [monitors[0]]
