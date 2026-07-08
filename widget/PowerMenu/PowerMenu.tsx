@@ -1,5 +1,5 @@
 import { Astal, Gtk, Gdk } from "ags/gtk4"
-import { createBinding } from "ags"
+import { createBinding, createState, createEffect } from "ags"
 import { execAsync } from "ags/process"
 import { powerMenuOpen, setPowerMenuOpen, activePowerMonitor } from "./state"
 import CrtMask from "../CrtMask"
@@ -21,13 +21,24 @@ function PowerButton({ label, cmd, isCritical = false }: { label: string, cmd: s
 
 export default function PowerMenu({ gdkmonitor }: { gdkmonitor?: Gdk.Monitor }) {
   const monitors = createBinding(app, "monitors")
+  const [visibleState, setVisibleState] = createState(false)
+
+  createEffect(() => {
+    if (powerMenuOpen()) {
+      setVisibleState(true)
+    } else {
+      setTimeout(() => {
+        setVisibleState(false)
+      }, 600)
+    }
+  })
 
   return (
     <window
       gdkmonitor={gdkmonitor}
       name={`powermenu-${gdkmonitor?.get_connector() || "default"}`}
       application={app}
-      visible={powerMenuOpen((v) => v)}
+      visible={visibleState((v) => v)}
       keymode={Astal.Keymode.EXCLUSIVE}
       layer={Astal.Layer.OVERLAY}
       anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.LEFT | Astal.WindowAnchor.RIGHT}
@@ -50,12 +61,12 @@ export default function PowerMenu({ gdkmonitor }: { gdkmonitor?: Gdk.Monitor }) 
           visible={activePowerMonitor((mon) => mon === (gdkmonitor?.get_connector() || ""))}
           hexpand
           vexpand
+          halign={Gtk.Align.CENTER}
+          valign={Gtk.Align.CENTER}
         >
           <CrtMask openState={powerMenuOpen} durationMs={600} scanlineHeight={30}>
             <box 
               class="powermenu-container" 
-              halign={Gtk.Align.CENTER} 
-              valign={Gtk.Align.CENTER}
               orientation={Gtk.Orientation.VERTICAL}
               spacing={32}
             >
