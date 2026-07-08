@@ -2,6 +2,7 @@ import { Astal, Gtk, Gdk } from "ags/gtk4"
 import { createBinding } from "ags"
 import { execAsync } from "ags/process"
 import { powerMenuOpen, setPowerMenuOpen, activePowerMonitor } from "./state"
+import CrtMask from "../CrtMask"
 import app from "ags/gtk4/app"
 
 function PowerButton({ label, cmd, isCritical = false }: { label: string, cmd: string, isCritical?: boolean }) {
@@ -47,29 +48,34 @@ export default function PowerMenu({ gdkmonitor }: { gdkmonitor?: Gdk.Monitor }) 
       <box class="powermenu-bg" hexpand vexpand halign={Gtk.Align.FILL} valign={Gtk.Align.FILL}>
         <box 
           visible={activePowerMonitor((mon) => mon === (gdkmonitor?.get_connector() || ""))}
-          class="powermenu-container" 
-          halign={Gtk.Align.CENTER} 
-          valign={Gtk.Align.CENTER}
           hexpand
           vexpand
-          orientation={Gtk.Orientation.VERTICAL}
-          spacing={32}
         >
-          <label class="powermenu-title" label="> SELECT_POWER_ACTION_" />
-          
-          <box class="powermenu-actions" spacing={24} orientation={Gtk.Orientation.HORIZONTAL}>
-            <PowerButton label="LOGOUT" cmd="hyprctl dispatch exit" />
-            <PowerButton label="SUSPEND" cmd="systemctl suspend" />
-            <PowerButton label="REBOOT" cmd="systemctl reboot" />
-            <PowerButton label="SHUTDOWN" cmd="systemctl poweroff" isCritical={true} />
-          </box>
-          
-          <button 
-            class="powermenu-cancel"
-            onClicked={() => setPowerMenuOpen(false)}
-          >
-            <label label="[ CANCEL ]" />
-          </button>
+          <CrtMask openState={powerMenuOpen} durationMs={600} scanlineHeight={30}>
+            <box 
+              class="powermenu-container" 
+              halign={Gtk.Align.CENTER} 
+              valign={Gtk.Align.CENTER}
+              orientation={Gtk.Orientation.VERTICAL}
+              spacing={32}
+            >
+              <label class="powermenu-title" label="> SELECT_POWER_ACTION_" />
+              
+              <box class="powermenu-actions" spacing={24} orientation={Gtk.Orientation.HORIZONTAL}>
+                <PowerButton label="LOGOUT" cmd="hyprctl dispatch exit" />
+                <PowerButton label="SUSPEND" cmd="systemctl suspend" />
+                <PowerButton label="REBOOT" cmd="systemctl reboot" />
+                <PowerButton label="SHUTDOWN" cmd="systemctl poweroff" isCritical={true} />
+              </box>
+              
+              <button 
+                class="powermenu-cancel"
+                onClicked={() => setPowerMenuOpen(false)}
+              >
+                <label label="[ CANCEL ]" />
+              </button>
+            </box>
+          </CrtMask>
         </box>
       </box>
     </window>
