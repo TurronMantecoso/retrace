@@ -3,8 +3,9 @@ import { Astal, Gtk, Gdk } from "ags/gtk4"
 import Apps from "gi://AstalApps"
 import GLib from "gi://GLib"
 import { execAsync } from "ags/process"
-import { createState } from "ags"
+import { createState, createEffect } from "ags"
 import CrtMask from "../CrtMask"
+import { applauncherOpen, setApplauncherOpen } from "./state"
 
 const MAX_ITEMS = 15
 
@@ -67,7 +68,7 @@ function lookupIcon(iconName: string | null): string {
 }
 
 function hide() {
-  app.get_window("applauncher")?.set_visible(false)
+  setApplauncherOpen(false)
 }
 
 class AppItemWidget {
@@ -159,6 +160,22 @@ export default function Applauncher() {
   let listContainer: Gtk.Box | null = null
   let searchEntry: Gtk.Entry | null = null
 
+  createEffect(() => {
+    if (applauncherOpen()) {
+      setVisibleState(true)
+      if (searchEntry) {
+        text = ""
+        searchEntry.text = ""
+        updateList()
+        setTimeout(() => { searchEntry?.grab_focus() }, 50)
+      }
+    } else {
+      setTimeout(() => {
+        setVisibleState(false)
+      }, 800)
+    }
+  })
+
   const itemPool: AppItemWidget[] = []
 
   const updateList = () => {
@@ -197,7 +214,7 @@ export default function Applauncher() {
     <window
       name="applauncher"
       application={app}
-      visible={false}
+      visible={visibleState((v) => v)}
       keymode={Astal.Keymode.EXCLUSIVE}
       layer={Astal.Layer.OVERLAY}
       anchor={Astal.WindowAnchor.NONE} // Flotante centrado
@@ -211,19 +228,9 @@ export default function Applauncher() {
           return false
         })
         self.add_controller(keyCtrl)
-
-        // Limpiar la caja de texto al abrir y sincronizar estado
-        self.connect("notify::visible", () => {
-          setVisibleState(self.visible)
-          if (self.visible) {
-            text = ""
-            if (searchEntry) searchEntry.text = ""
-            updateList()
-          }
-        })
       }}
     >
-      <CrtMask openState={() => visibleState()} durationMs={800}>
+      <CrtMask openState={applauncherOpen} durationMs={800}>
         <box class="applauncher-window" orientation={Gtk.Orientation.VERTICAL} spacing={10}>
           <box class="applauncher-search" spacing={8}>
             <label label=">" class="prompt-icon" />

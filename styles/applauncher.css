@@ -42,9 +42,16 @@ window.applauncher {
   caret-color: @purple-bright;
 }
 
-.applauncher-search entry:focus {
+.applauncher-search entry:focus,
+.applauncher-search entry:focus-within {
   border: none;
   box-shadow: none;
+  outline: none;
+}
+
+.applauncher-search:focus-within {
+  border-color: @purple-bright;
+  box-shadow: 0 0 8px @purple;
 }
 
 .app-list {
