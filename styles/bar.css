@@ -55,6 +55,27 @@
   padding: 0 8px;
 }
 
+.reloj-label > popover > contents {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.cal-terminal-box {
+  background-color: @bg;
+  border: 2px solid @purple;
+  padding: 12px;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+}
+
+.cal-terminal-text {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 14px;
+  color: @purple-bright;
+  letter-spacing: 0;
+}
+
 /* ── Audio ── */
 .audio {
   background: transparent;

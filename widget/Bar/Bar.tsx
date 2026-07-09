@@ -210,21 +210,36 @@ function Reloj() {
   const hora = createPoll("", 1000, "date '+%H:%M'")
   const fechaCompleta = createPoll("", 60000, "date '+%A, %d de %B %Y'")
 
-  let cal: Gtk.Calendar
+  const calText = createPoll("", 60000, () => {
+    try {
+      const out = exec("cal --color=never")
+      const day = new Date().getDate().toString()
+      const lines = out.split("\n")
+      for (let i = 2; i < lines.length; i++) {
+        const regex = new RegExp(`\\b${day}\\b`)
+        if (regex.test(lines[i])) {
+          lines[i] = lines[i].replace(regex, `<span background="#cba6f7" foreground="#11111b"><b>$&</b></span>`)
+          break
+        }
+      }
+      return lines.join("\n")
+    } catch (e) {
+      return "Error loading calendar"
+    }
+  })
 
   return (
     <menubutton class="reloj-label" tooltipText={fechaCompleta}>
       <label label={hora} />
-      <popover
-        $={(self) => {
-          self.connect("notify::visible", () => {
-            if (self.get_visible() && cal) {
-              cal.select_day(GLib.DateTime.new_now_local())
-            }
-          })
-        }}
-      >
-        <Gtk.Calendar $={(self) => (cal = self)} />
+      <popover>
+        <box class="cal-terminal-box">
+          <label 
+            class="cal-terminal-text" 
+            label={calText} 
+            useMarkup={true}
+            justify={Gtk.Justification.LEFT} 
+          />
+        </box>
       </popover>
     </menubutton>
   )
