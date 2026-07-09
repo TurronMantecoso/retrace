@@ -68,7 +68,8 @@ function lookupIcon(iconName: string | null): string {
 }
 
 function hide() {
-  setApplauncherOpen(false)
+  const win = app.get_window("applauncher")
+  if (win) win.set_visible(false)
 }
 
 class AppItemWidget {
