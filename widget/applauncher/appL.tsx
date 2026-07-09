@@ -159,6 +159,7 @@ export default function Applauncher() {
   let text = ""
   let listContainer: Gtk.Box | null = null
   let searchEntry: Gtk.Entry | null = null
+  let searchTimeout: any = null
 
   const itemPool: AppItemWidget[] = []
 
@@ -250,7 +251,10 @@ export default function Applauncher() {
             placeholderText="ejecutar_"
             onChanged={(self) => {
               text = self.text
-              updateList()
+              if (searchTimeout) clearTimeout(searchTimeout)
+              searchTimeout = setTimeout(() => {
+                updateList()
+              }, 60)
             }}
             onActivate={() => {
               const results = apps.fuzzy_query(text)
