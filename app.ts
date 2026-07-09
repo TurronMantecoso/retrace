@@ -49,21 +49,12 @@ app.start({
   css: "./style.css",
   requestHandler: (args: string[], res: (response: any) => void) => {
     if (args[0] === "toggle" && args[1]) {
-      if (args[1] === "applauncher") {
-        setApplauncherOpen(!applauncherOpen())
-        return res("ok")
-      }
       const win = app.get_window(args[1])
       if (win) {
         win.set_visible(!win.visible)
         return res("ok")
       }
       return res("window not found")
-    }
-    
-    if (args[0] === "applauncher") {
-      setApplauncherOpen(!applauncherOpen())
-      return res("ok")
     }
 
     const win = app.get_window(args[0])

@@ -154,27 +154,10 @@ class AppItemWidget {
 
 export default function Applauncher() {
   const apps = new Apps.Apps()
-  const [visibleState, setVisibleState] = createState(false)
   
   let text = ""
   let listContainer: Gtk.Box | null = null
   let searchEntry: Gtk.Entry | null = null
-
-  createEffect(() => {
-    if (applauncherOpen()) {
-      setVisibleState(true)
-      if (searchEntry) {
-        text = ""
-        searchEntry.text = ""
-        updateList()
-        setTimeout(() => { searchEntry?.grab_focus() }, 50)
-      }
-    } else {
-      setTimeout(() => {
-        setVisibleState(false)
-      }, 800)
-    }
-  })
 
   const itemPool: AppItemWidget[] = []
 
@@ -214,7 +197,7 @@ export default function Applauncher() {
     <window
       name="applauncher"
       application={app}
-      visible={visibleState((v) => v)}
+      visible={false}
       keymode={Astal.Keymode.EXCLUSIVE}
       layer={Astal.Layer.OVERLAY}
       anchor={Astal.WindowAnchor.NONE} // Flotante centrado
@@ -227,6 +210,32 @@ export default function Applauncher() {
           }
           return false
         })
+        // Handle ags toggle and animations
+        let isAnimatingHide = false;
+        self.connect("notify::visible", () => {
+          if (self.visible) {
+             if (!applauncherOpen() && !isAnimatingHide) {
+                setApplauncherOpen(true)
+                if (searchEntry) {
+                   text = ""
+                   searchEntry.text = ""
+                   updateList()
+                   setTimeout(() => searchEntry?.grab_focus(), 50)
+                }
+             }
+          } else {
+             if (applauncherOpen() && !isAnimatingHide) {
+                isAnimatingHide = true;
+                setApplauncherOpen(false);
+                self.visible = true;
+                setTimeout(() => {
+                   self.visible = false;
+                   isAnimatingHide = false;
+                }, 800)
+             }
+          }
+        })
+
         self.add_controller(keyCtrl)
       }}
     >
